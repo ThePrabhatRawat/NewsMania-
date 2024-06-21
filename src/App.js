@@ -1,58 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+// src/App.js
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCategories, fetchNews, resetFilters } from './features/newsSlice/newsSlice';
+import HomePage from './components/Home';
+import NewsDetailPage from './components/NewsDetail';
+import Layout from './components/Layout';
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.news);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(fetchNews({ page: 1, category: '' }));
+  }, [dispatch]);
+
+  const handleSelectCategory = (category) => {
+    dispatch(resetFilters());
+    dispatch(fetchNews({ page: 1, category }));
+  };
+
+  const handleHomeClick = () => {
+    dispatch(resetFilters());
+    dispatch(fetchNews({ page: 1, category: '' }));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout categories={categories} onSelectCategory={handleSelectCategory} onHomeClick={handleHomeClick}><HomePage /></Layout>} />
+        <Route path="/articles/:id" element={<Layout categories={categories} onSelectCategory={handleSelectCategory} onHomeClick={handleHomeClick}><NewsDetailPage /></Layout>} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
