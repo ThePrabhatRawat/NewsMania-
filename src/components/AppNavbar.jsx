@@ -8,18 +8,20 @@ const AppNavbar = ({ categories, onSelectCategory }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState('');
-
+// handles logo click
   const handleLogoClick = () => {
     dispatch(resetFilters());
     dispatch(fetchNews({ page: 1, category: '' }));
     navigate('/');
   };
-
+// handles when user clicks on home button
   const handleHomeClick = () => {
     dispatch(resetFilters());
     dispatch(fetchNews({ page: 1, category: '' }));
     navigate('/');
   };
+
+  // handling search functionality
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm) {

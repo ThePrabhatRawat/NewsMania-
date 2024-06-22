@@ -1,15 +1,16 @@
 // src/components/HomePage.js
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col ,Alert } from 'react-bootstrap';
 import { fetchNews, fetchNewsByKeyword } from '../features/newsSlice/newsSlice.js';
 import NewsCard from './NewsCard';
 import NewsPagination from './Pagination';
+import Spinner from '../components/Spinner.jsx'
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const { articles, status, error, currentPage, selectedCategory, searchKeyword } = useSelector((state) => state.news);
-
+    // useeffect to dispatch the general category fetching and to response to change in vaious changes like category select and all
   useEffect(() => {
     if (searchKeyword) {
       dispatch(fetchNewsByKeyword({ page: currentPage, keyword: searchKeyword }));
@@ -18,6 +19,7 @@ const HomePage = () => {
     }
   }, [dispatch, currentPage, selectedCategory, searchKeyword]);
 
+  // status handling while fetching the data
   if (status === 'loading') {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -38,8 +40,8 @@ const HomePage = () => {
             <NewsCard
               id={index}
               title={article.title}
-              image={article.urlToImage}
-              summary={article.description}
+              image={article.image}
+              description={article.description}
               publishedAt={article.publishedAt}
             />
           </Col>

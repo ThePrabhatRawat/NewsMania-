@@ -11,7 +11,7 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 
-
+// defining store
 root.render(
   <React.StrictMode>
     <Provider store={store}>

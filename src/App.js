@@ -10,17 +10,17 @@ import Layout from './components/Layout';
 const App = () => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.news);
-
+// at start fetching a genral category news
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchNews({ page: 1, category: '' }));
   }, [dispatch]);
-
+// while selecting a new category sesting the previous category
   const handleSelectCategory = (category) => {
     dispatch(resetFilters());
     dispatch(fetchNews({ page: 1, category }));
   };
-
+// handling home click to ensure all filters are reset and reach to the starting page
   const handleHomeClick = () => {
     dispatch(resetFilters());
     dispatch(fetchNews({ page: 1, category: '' }));

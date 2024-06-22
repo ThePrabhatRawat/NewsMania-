@@ -9,7 +9,8 @@ const NewsPagination = () => {
   const { totalResults, currentPage, selectedCategory, searchKeyword } = useSelector((state) => state.news);
 
   const totalPages = Math.ceil(totalResults / 10);
-
+// function to handle page change 
+// currently this function will not work because of the use of api which doesn't allow pagination feature in free membership
   const handlePageChange = (pageNumber) => {
     dispatch(setPage(pageNumber));
     if (searchKeyword) {
@@ -19,31 +20,14 @@ const NewsPagination = () => {
     }
   };
 
-  const getPaginationItems = () => {
-    const items = [];
-    for (let number = 1; number <= totalPages; number++) {
-      items.push(
-        <Pagination.Item
-          key={number}
-          active={number === currentPage}
-          onClick={() => handlePageChange(number)}
-        >
-          {number}
-        </Pagination.Item>
-      );
-    }
-    return items;
-  };
-
   return (
     <Pagination className="flex-wrap">
-      <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
       <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
-      {getPaginationItems()}
+      <Pagination.Item disabled>{`${currentPage} of ${totalPages} pages`}</Pagination.Item>
       <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
-      <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
     </Pagination>
   );
 };
 
 export default NewsPagination;
+

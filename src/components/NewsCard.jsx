@@ -2,8 +2,9 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-const NewsCard = ({ id, title, image, summary, publishedAt }) => {
+//card component to dispaly the image ,vedio title etc. of a perticular article in sqaired shaped form
+const NewsCard = ({ id, title, image, description, publishedAt }) => {
+  
   return (
     <Card className="h-100 mt-1 news-card mt-1 rounded-3">
       <Card.Img
@@ -15,7 +16,7 @@ const NewsCard = ({ id, title, image, summary, publishedAt }) => {
       />
       <Card.Body className="d-flex flex-column">
         <Card.Title className='news-title'>{title}</Card.Title>
-        <Card.Text className="flex-grow-1 .news-summary">{summary}</Card.Text>
+        <Card.Text className="flex-grow-1 .news-summary">{description}</Card.Text>
         <Card.Text>
           <small className="text-muted">Published on: {new Date(publishedAt).toLocaleDateString()}</small>
         </Card.Text>

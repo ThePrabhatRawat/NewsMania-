@@ -2,20 +2,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const apiKey = '283d6fdb6fd04ebab9a10398d42643e6';
-const baseURL = 'https://newsapi.org/v2';
+const apiKey = process.env.REACT_APP_API_KEY;
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 // Async thunks
 export const fetchNews = createAsyncThunk(
   'news/fetchNews',
   async ({ page, category }) => {
-    const response = await axios.get(`${baseURL}/top-headlines?country=in`, {
+    console.log(page)
+    const response = await axios.get(`${baseURL}/top-headlines`, {
       params: {
-        apiKey,
+        category: category || 'general',
+        lang: 'en',
         page,
-        category,
-        pageSize: 10
-      }
+        country: 'in',
+        max: 10,
+        apikey: apiKey,
+      },
     });
     return response.data;
   }
@@ -24,13 +27,15 @@ export const fetchNews = createAsyncThunk(
 export const fetchNewsByKeyword = createAsyncThunk(
   'news/fetchNewsByKeyword',
   async ({ page, keyword }) => {
-    const response = await axios.get(`${baseURL}/everything`, {
+    const response = await axios.get(`${baseURL}/search`, {
       params: {
-        apiKey,
-        page,
         q: keyword,
-        pageSize: 10
-      }
+        lang: 'en',
+        page,
+        country: 'in',
+        max: 10,
+        apikey: apiKey,
+      },
     });
     return response.data;
   }
@@ -63,7 +68,7 @@ const newsSlice = createSlice({
     currentPage: 1,
     selectedCategory: '',
     searchKeyword: '',
-    categories: []
+    categories: [],
   },
   reducers: {
     setPage: (state, action) => {
@@ -79,7 +84,7 @@ const newsSlice = createSlice({
     },
     clearArticle: (state) => {
       state.article = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,7 +94,7 @@ const newsSlice = createSlice({
       .addCase(fetchNews.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.articles = action.payload.articles;
-        state.totalResults = action.payload.totalResults;
+        state.totalResults = action.payload.totalArticles;
       })
       .addCase(fetchNews.rejected, (state, action) => {
         state.status = 'failed';
@@ -101,7 +106,7 @@ const newsSlice = createSlice({
       .addCase(fetchNewsByKeyword.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.articles = action.payload.articles;
-        state.totalResults = action.payload.totalResults;
+        state.totalResults = action.payload.totalArticles;
       })
       .addCase(fetchNewsByKeyword.rejected, (state, action) => {
         state.status = 'failed';
@@ -121,7 +126,7 @@ const newsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       });
-  }
+  },
 });
 
 export const { setPage, setSearchKeyword, resetFilters, clearArticle } = newsSlice.actions;
